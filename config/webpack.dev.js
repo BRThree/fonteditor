@@ -6,6 +6,8 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = {
     entry: {
         index: './src/fonteditor/index',
@@ -33,7 +35,8 @@ module.exports = {
             'inflate$': path.resolve(__dirname, '../dep/pako_inflate.min.js'),
             'deflate$': path.resolve(__dirname, '../dep/pako_deflate.min.js'),
             'paper$': path.resolve(__dirname, '../dep/paper-full.js'),
-            'utpl$': path.resolve(__dirname, '../dep/utpl.min.js')
+            'utpl$': path.resolve(__dirname, '../dep/utpl.min.js'),
+            '@': path.resolve(__dirname, '../src/fonteditor')
         }
     },
     externals: {
@@ -58,16 +61,20 @@ module.exports = {
             filename: 'editor.html',
             template: path.resolve(__dirname, '../editor.tpl'),
             chunks: ['editor']
+        }),
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[id].css',
         })
     ],
     module: {
         rules: [
             {
-                test: /\/(index|empty|editor)\.tpl$/,
+                test: /\\(index|empty|editor)\.tpl$/,
                 loader: 'index-loader'
             },
             {
-                test: /template\/(.+?)\.tpl$/,
+                test: /template\\(.+?)\.tpl$/,
                 loader: 'tpl-loader'
             },
             {
@@ -102,6 +109,50 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /(\.jsx|\.js)$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env'],//最新JS语法后向兼容
+                        plugins: ['@babel/plugin-transform-react-jsx'],//JSX编译
+                    },
+                },
+                exclude: /node_modules/
+            },
+            {
+              test: /\.module\.s(a|c)ss$/,
+              loader: [
+                'style-loader',
+                {
+                  loader: 'css-loader',
+                  options: {
+                    modules: true,
+                    sourceMap: true
+                  }
+                },
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    sourceMap: true
+                  }
+                }
+              ]
+            },
+            {
+              test: /\.s(a|c)ss$/,
+              exclude: /\.module.(s(a|c)ss)$/,
+              loader: [
+                'style-loader',
+                'css-loader',
+                {
+                  loader: 'sass-loader',
+                  options: {
+                    sourceMap: true
+                  }
+                }
+              ]
             }
         ]
     },

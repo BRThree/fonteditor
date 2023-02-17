@@ -28,6 +28,10 @@ import previewerWidget from './widget/previewer';
 import syncWidget from './widget/sync';
 import projectWidget from './widget/project';
 
+import React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import App from './App';
+import './global.scss';
 
 
 function loadFiles(files) {
@@ -188,11 +192,10 @@ function main() {
 
     // 加载项目
     program.projectViewer.show(program.project.items());
-    let projectId = getProjectId();
-    if (projectId) {
-        loadProject(projectId);
-    }
 }
 
 // entry
-main();
+// main();
+
+const root = document.querySelector('#root');
+ReactDOM.createRoot(root).render(<App />);

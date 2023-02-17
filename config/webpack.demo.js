@@ -83,11 +83,11 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\/(index|empty|editor)\.tpl$/,
+                test: /\\(index|empty|editor)\.tpl$/,
                 loader: 'index-loader'
             },
             {
-                test: /template\/(.+?)\.tpl$/,
+                test: /template\\(.+?)\.tpl$/,
                 loader: 'tpl-loader'
             },
             {
@@ -122,7 +122,40 @@ module.exports = {
                         }
                     }
                 ]
-            }
+            },
+            {
+                test: /\.module\.s(a|c)ss$/,
+                loader: [
+                  MiniCssExtractPlugin.loader,
+                  {
+                    loader: 'css-loader',
+                    options: {
+                      modules: true,
+                      sourceMap: false
+                    }
+                  },
+                  {
+                    loader: 'sass-loader',
+                    options: {
+                      sourceMap: false
+                    }
+                  }
+                ]
+              },
+              {
+                test: /\.s(a|c)ss$/,
+                exclude: /\.module.(s(a|c)ss)$/,
+                loader: [
+                  MiniCssExtractPlugin.loader,
+                  'css-loader',
+                  {
+                    loader: 'sass-loader',
+                    options: {
+                      sourceMap: false
+                    }
+                  }
+                ]
+              }
         ]
     },
     resolveLoader: {

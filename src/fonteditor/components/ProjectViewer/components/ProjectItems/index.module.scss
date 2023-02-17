@@ -1,0 +1,9 @@
+.project-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  
+  height: auto;
+
+  transition: .25s;
+}

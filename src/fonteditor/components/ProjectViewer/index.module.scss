@@ -1,0 +1,17 @@
+.project-viewer {
+  height: 100%;
+
+  .btn-box {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: centers;
+    flex-direction: row;
+    margin-bottom: 8px;
+  }
+
+  .main-menu {
+    height: calc(100% - 32px);
+    width: 100%;
+  }
+}

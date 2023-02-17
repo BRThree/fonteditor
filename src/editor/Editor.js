@@ -129,7 +129,7 @@ export default class Editor {
     /**
      * 执行指定命令
      *
-     * @param {...string} command 指令名，后续为命令参数集合
+     * @param {string} command 指令名，后续为命令参数集合
      * @param {...Array} args args
      * @return {boolean} 是否执行成功
      */

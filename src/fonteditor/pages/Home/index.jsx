@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout } from 'antd';
 import ScrollBar from 'react-custom-scrollbars';
 import styles from './index.module.scss';
@@ -11,7 +11,7 @@ const Home = () => {
   return (
     <Layout className={styles['main-layout']}>
       <Sider className={styles['sider']} width={200}>
-        <ProjectViewer/>
+        <ProjectViewer />
       </Sider>
       <Content className={styles['main']}>
         <ScrollBar autoHide className={styles['scroll-bar']}>

@@ -14,7 +14,7 @@ const router = createHashRouter(routes);
 function FontEditorLayout() {
   return (
     <Layout className={styles['layout']}>
-      <Header>
+      <Header className={styles['header']}>
         <Menu theme="dark" mode="horizontal" items={headerMenus} />
       </Header>
       <Content className={styles['content']}>

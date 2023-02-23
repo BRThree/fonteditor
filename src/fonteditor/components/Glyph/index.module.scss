@@ -1,0 +1,81 @@
+.glyph-container {
+  height: 180px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: #00407b;
+  border: #00407b 3px solid;
+  transition: 0.3s;
+  overflow: hidden;
+  position: relative;
+
+  .glyph {
+    background-color: white;
+    height: calc(120px - 6px);
+  }
+
+  .glyph-info {
+    height: calc(180px - 120px);
+    color: white;
+    padding: 0 4px;
+    .glyph-unicode {
+      height: 60%;
+      font-size: 24px;
+      font-weight: bolder;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+    .glyph-name {
+      height: 40%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  .opt-box {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    font-size: 14px;
+    color: #00407b;
+    opacity: 0;
+    transition: 0.3s;
+
+    .opt-icon {
+      cursor: pointer;
+    }
+  }
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 42, 80, 0.5);
+    .opt-box {
+      opacity: 1;
+    }
+  }
+}
+
+.glyph-empty {
+  height: 180px;
+  width: 100%;
+  border-radius: 8px;
+  background-color: #eeeeee;
+  transition: 0.3s;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  font-size: 24px;
+  color: #cccccc;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(0, 42, 80, 0.3);
+    color: #5199dc;
+  }
+}

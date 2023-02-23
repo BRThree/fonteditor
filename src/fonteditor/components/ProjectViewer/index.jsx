@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import styles from './index.module.scss';
 import { Button, Menu, Modal, Form, Input } from 'antd';
-import ProgramContext from '@/context/ProgramContext';
+import { useProgramStore } from '@/store/programStore';
 import ProjectItems from './components/ProjectItems';
 import { FileAddOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { validate, resetForm } from '@/utils';
@@ -13,7 +13,8 @@ function ProjectViewer() {
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
   const formRef = useRef();
 
-  const { program } = useContext(ProgramContext);
+  const { program, setProjectId, getProjectId, openProject } =
+    useProgramStore();
 
   const getMenuList = () =>
     program && program.project ? program.project.items() : [];
@@ -40,18 +41,25 @@ function ProjectViewer() {
     );
   };
 
-  const init = () => {
-    menuInit();
+  const init = async () => {
+    const curProject = getProjectId();
+    menuInit(undefined, curProject);
+    await program.project.ready();
+    openProject(curProject);
   };
 
-  const handleSelectMenuItem = ({ key }) => {
-    setSelectedKeys([key]);
+  const handleSelectMenuItem = async ({ key }) => {
+    const imported = await openProject(key);
+    if (imported) {
+      setProjectId(key);
+      setSelectedKeys([key]);
+    }
   };
 
   const handleDeleteProject = async (item) => {
     const res = await program.project.remove(item.key);
-    if (item.key === program.data.projectId) {
-      program.data.projectId = null;
+    if (item.key === getProjectId()) {
+      setProjectId(null);
     }
     menuInit(res);
   };
@@ -60,7 +68,7 @@ function ProjectViewer() {
     setIsProjectFormOpen(true);
   };
 
-  const handleOpenProject = () => {};
+  const handleOpenFile = () => {};
 
   const handleCloseProject = () => {
     setIsProjectFormOpen(false);
@@ -70,7 +78,7 @@ function ProjectViewer() {
   const onOk = async () => {
     try {
       const res = await validate(formRef?.current);
-      actions['add-new'](program, () => res.name);
+      actions['new'](program, undefined, () => res.name);
       menuInit();
       handleCloseProject();
     } catch (err) {
@@ -94,7 +102,7 @@ function ProjectViewer() {
           新建
         </Button>
         <Button
-          onClick={handleOpenProject}
+          onClick={handleOpenFile}
           type="primary"
           icon={<FolderOpenOutlined />}
         >

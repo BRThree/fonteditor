@@ -155,8 +155,8 @@ actions = {
       config: config
     });
   },
-  'dosync'(projectId) {
-    let syncConfig = program.project.getConfig(projectId).sync;
+  'dosync'(program) {
+    let syncConfig = program.project.getConfig(program.data.projectId).sync;
     if (syncConfig && syncConfig.autoSync) {
       actions.sync(projectId, program.ttfManager.get(), syncConfig);
     }
@@ -170,7 +170,7 @@ actions = {
           .then(function () {
             program.ttfManager.setState('saved');
             program.loading.show(i18n.lang.msg_save_success, 400);
-            actions.dosync(projectId);
+            actions.dosync(program);
           }, function () {
             program.loading.show(i18n.lang.msg_save_failed, 1000);
           });
@@ -196,16 +196,13 @@ actions = {
     }
   },
 
-  'add-new'(program, func) {
-    // if (program.ttfManager.get()) {
-      // let selected = program.viewer.getSelected();
-      // program.ttfManager.insertGlyf({}, selected[0]);
-    // }
-    // else {
-      // 没有项目 先建立一个项目
-      // actions.new(program, undefined, func);
-    // }
-    actions.new(program, undefined, func);
+  'add-new'(program, selected = []) {
+    if(!program) return;
+    if (program.ttfManager.get()) {
+      program.ttfManager.insertGlyf({}, selected[0]);
+    } else {
+      throw(new Error('没有项目，请新建或导入一个项目'));
+    }
   },
 
   'add-online'() {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './index.module.scss';
 import { useProgramStore } from '@/store/programStore';
 import Glyph from '@/components/Glyph';
@@ -7,13 +7,20 @@ import { Col, Row } from 'antd';
 import actions from '@/controller/actionsNew';
 import { useTtfStore } from '@/store/ttfStore';
 import { useNavigate } from 'react-router-dom';
+import useNodeBoundingRect from '@/hooks/useNodeBoundingRect';
 
 function GlyphList() {
   const { program, getProjectId } = useProgramStore();
   const { ttf } = useTtfStore();
   const navigate = useNavigate();
+  const [rect, glyphContainer] = useNodeBoundingRect();
+  
 
   const [glyphList, setGlyphList] = useState([]);
+  const span = useMemo(
+    () => (rect ? Math.round(120 / (rect.width / 24)) : 2),
+    [rect]
+  );
 
   useEffect(() => {
     ttf && setGlyphList([...program.ttfManager.getGlyf()]);
@@ -27,7 +34,7 @@ function GlyphList() {
 
     return glyphList.map((item, index) => {
       return (
-        <Col key={`${getProjectId()}-${index}`} span={2}>
+        <Col key={`${getProjectId()}-${index}`} span={span}>
           <Glyph
             index={index}
             onEdit={handleEdit}
@@ -43,7 +50,7 @@ function GlyphList() {
   };
 
   const handleEdit = (index) => {
-    navigate('/editor');
+    navigate(`/editor?index=${index}`);
   };
 
   const handleDelete = (index) => {
@@ -58,18 +65,22 @@ function GlyphList() {
 
   const handleSave = (evt) => {
     if (evt.key === 's' && (evt.ctrlKey || evt.metaKey)) {
-      debugger;
       evt.preventDefault();
       actions['save'](program);
     }
   };
 
   return (
-    <div tabIndex={-1} onKeyDown={handleSave} className={styles['glyph-list']}>
+    <div
+      ref={glyphContainer}
+      tabIndex={-1}
+      onKeyDown={handleSave}
+      className={styles['glyph-list']}
+    >
       <CommandMenu />
       <Row gutter={[8, 8]}>
         {renderGlyphList()}
-        <Col span={2}>
+        <Col span={span}>
           <Glyph onPlus={handlePlus} type="empty" />
         </Col>
       </Row>

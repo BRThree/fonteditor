@@ -1,14 +1,41 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import editorCommandMenuConfig from '@/menu/editor';
 import Toolbar from '@/widget/Toolbar';
 import GLYFEditor from '@/widget/GLYFEditor';
 import SplitPane, { Pane } from 'react-split-pane';
 import styles from './index.module.scss';
 import GlyphList from '@/components/GlyphList';
+import { useSearchParams } from 'react-router-dom';
+import { useTtfStore } from '@/store/ttfStore';
+import lang from 'common/lang';
+import i18n from '@/i18n/i18n';
+import compound2simple from 'fonteditor-core/ttf/util/compound2simple';
+import transformGlyfContours from 'fonteditor-core/ttf/util/transformGlyfContours';
+import ProjectViewer from '@/components/ProjectViewer';
 
 function Editor() {
   const [editorController, setEditorController] = useState(null);
   const [isResizing, setIsResizing] = useState(false);
+  
+  const [params] = useSearchParams();
+  const index = useMemo(() => +Number(params.get('index')), [params]);
+  const { ttf } = useTtfStore();
+
+  // 初始化字体
+  const initCurGlyph = () => {
+    let font = ttf.glyf[index];
+    if (font) {
+        let clonedFont = lang.clone(font);
+        if (clonedFont.compound) {
+            if (!confirm(i18n.lang.msg_transform_compound_glyf)) {
+                return;
+            }
+            // 转换复合字形为简单字形，原始字形不变
+            clonedFont = compound2simple(clonedFont, transformGlyfContours(font, ttf));
+        }
+        editorController.setFont(clonedFont);
+    }
+  };
 
   const init = () => {
     const editorMenuDom = $('#editor-menu');
@@ -53,6 +80,10 @@ function Editor() {
     };
   }, []);
 
+  useEffect(() => {
+    ttf && editorController && initCurGlyph();
+  }, [ttf, editorController, index]);
+
   return (
     <div className={styles['editor-container']} id="editor-container">
       <div className={styles['editor-menu']} id="editor-menu"></div>
@@ -81,6 +112,7 @@ function Editor() {
           </Pane>
         </SplitPane>
       </div>
+      <ProjectViewer hidden />
     </div>
   );
 }

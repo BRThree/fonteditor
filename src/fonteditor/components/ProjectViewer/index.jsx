@@ -7,7 +7,7 @@ import { FileAddOutlined, FolderOpenOutlined } from '@ant-design/icons';
 import { validate, resetForm } from '@/utils';
 import actions from '@/controller/actionsNew';
 
-function ProjectViewer() {
+function ProjectViewer({hidden = false}) {
   const [asideMenus, setAsideMenus] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
@@ -91,7 +91,7 @@ function ProjectViewer() {
     return () => {};
   }, []);
 
-  return (
+  return !hidden ? (
     <div className={styles['project-viewer']}>
       <div className={styles['btn-box']}>
         <Button
@@ -135,7 +135,9 @@ function ProjectViewer() {
         </Form>
       </Modal>
     </div>
-  );
+  ) : (
+    <></>
+  )
 }
 
 export default ProjectViewer;

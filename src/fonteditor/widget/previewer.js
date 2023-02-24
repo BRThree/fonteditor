@@ -6,7 +6,6 @@
 
 import resolvettf from './util/resolvettf';
 import core from 'fonteditor-core/main';
-import program from './program';
 import previewRender from '../template/preview-render'; // 模板渲染函数
 const isIE = !!window.ActiveXObject || 'ActiveXObject' in window;
 
@@ -20,7 +19,7 @@ const ttf2icon = core.ttf2icon;
  * @param {string} fontFormat 字体类型
  * @return {string} html字符串
  */
-function generatePreviewHTML(ttf, fontFormat) {
+function generatePreviewHTML(program, ttf, fontFormat) {
     let options = {
         type: fontFormat || 'ttf'
     };

@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { createStore } from 'hox';
+import { createGlobalStore  } from 'hox';
 
 
-export const [useProjectStore, ProjectStoreProvider] = createStore(() => {
+export const [useProjectStore, getProjectStore] = createGlobalStore(() => {
   const [project, setProject] = useState(null);
 
   return {

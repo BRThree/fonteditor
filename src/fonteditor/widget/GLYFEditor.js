@@ -6,7 +6,6 @@
 import editorFactory from 'editor/main';
 import editorOptions from 'editor/options';
 import settingSupport from '../dialog/support';
-import program from './program';
 import lang from 'common/lang';
 
 
@@ -29,7 +28,7 @@ const COMMAND_SUPPORT = {
 /**
  * 绑定editor编辑器
  */
-function bindEditor() {
+function bindEditor(program) {
 
     // 设置字形信息
     let me = this;
@@ -83,7 +82,6 @@ function bindEditor() {
         }), 100);
 
         commandMenu.on('command', function (e) {
-
             // 这里延时进行focus
             delayFocus();
 
@@ -175,13 +173,13 @@ export default class GLYFEditor {
         /**
          * 显示
          */
-        show() {
+        show(program) {
             // 这里注意显示顺序，否则editor创建的时候计算宽度会错误
             this.main.show();
 
             if (!this.editor) {
                 this.editor = editorFactory.create(this.main.get(0));
-                bindEditor.call(this);
+                bindEditor.call(this, program);
             }
 
             this.editing = true;

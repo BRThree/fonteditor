@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { createStore } from 'hox';
+import { createGlobalStore  } from 'hox';
 
-export const [useTtfStore, TtfStoreProvider] = createStore(() => {
+export const [useTtfStore, getTtfStore] = createGlobalStore(() => {
   const [ttf, setTtf] = useState(null);
 
   return {

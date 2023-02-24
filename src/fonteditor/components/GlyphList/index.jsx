@@ -1,22 +1,22 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import styles from './index.module.scss';
-import { useProgramStore } from '@/store/programStore';
 import Glyph from '@/components/Glyph';
 import CommandMenu from '@/components/CommandMenu';
 import { Col, Row } from 'antd';
 import actions from '@/controller/actionsNew';
+import { useProgramStore } from '@/store/programStore';
 import { useTtfStore } from '@/store/ttfStore';
 import { useNavigate } from 'react-router-dom';
+import { useGlyphListStore } from '../../store/glyphListStore';
 import useNodeBoundingRect from '@/hooks/useNodeBoundingRect';
 
 function GlyphList() {
   const { program, getProjectId } = useProgramStore();
   const { ttf } = useTtfStore();
+  const { glyphList, setGlyphList, setEditingIndex } = useGlyphListStore();
   const navigate = useNavigate();
   const [rect, glyphContainer] = useNodeBoundingRect();
-  
 
-  const [glyphList, setGlyphList] = useState([]);
   const span = useMemo(
     () => (rect ? Math.round(120 / (rect.width / 24)) : 2),
     [rect]
@@ -24,6 +24,10 @@ function GlyphList() {
 
   useEffect(() => {
     ttf && setGlyphList([...program.ttfManager.getGlyf()]);
+
+    return () => {
+      // setEditingIndex(-1);
+    }
   }, [ttf]);
 
   const renderGlyphList = () => {
@@ -50,6 +54,7 @@ function GlyphList() {
   };
 
   const handleEdit = (index) => {
+    setEditingIndex(index);
     navigate(`/editor?index=${index}`);
   };
 
@@ -63,20 +68,8 @@ function GlyphList() {
     setGlyphList([...program.ttfManager.getGlyf()]);
   };
 
-  const handleSave = (evt) => {
-    if (evt.key === 's' && (evt.ctrlKey || evt.metaKey)) {
-      evt.preventDefault();
-      actions['save'](program);
-    }
-  };
-
   return (
-    <div
-      ref={glyphContainer}
-      tabIndex={-1}
-      onKeyDown={handleSave}
-      className={styles['glyph-list']}
-    >
+    <div ref={glyphContainer} className={styles['glyph-list']}>
       <CommandMenu />
       <Row gutter={[8, 8]}>
         {renderGlyphList()}

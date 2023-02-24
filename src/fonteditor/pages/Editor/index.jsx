@@ -12,14 +12,18 @@ import i18n from '@/i18n/i18n';
 import compound2simple from 'fonteditor-core/ttf/util/compound2simple';
 import transformGlyfContours from 'fonteditor-core/ttf/util/transformGlyfContours';
 import ProjectViewer from '@/components/ProjectViewer';
+import { useProgramStore } from '@/store/programStore';
+import { useGlyphListStore } from '../../store/glyphListStore';
 
 function Editor() {
   const [editorController, setEditorController] = useState(null);
   const [isResizing, setIsResizing] = useState(false);
+  const { setEditingIndex } = useGlyphListStore();
   
   const [params] = useSearchParams();
   const index = useMemo(() => +Number(params.get('index')), [params]);
   const { ttf } = useTtfStore();
+  const { program, bindProgramEvent } = useProgramStore();
 
   // 初始化字体
   const initCurGlyph = () => {
@@ -51,7 +55,9 @@ function Editor() {
       commandMenu: editorCommandMenu,
     });
 
-    editor.show();
+    editor.show(program);
+    bindProgramEvent(editor, index);
+    setEditingIndex(index);
 
     setEditorController(editor);
 
@@ -81,7 +87,7 @@ function Editor() {
   }, []);
 
   useEffect(() => {
-    ttf && editorController && initCurGlyph();
+    ttf && editorController && initCurGlyph()
   }, [ttf, editorController, index]);
 
   return (

@@ -1,11 +1,14 @@
-import { useState } from 'react';
-import { createStore } from 'hox';
+import { useState, useEffect } from 'react';
+import { createGlobalStore } from 'hox';
+import { useTtfStore } from '../ttfStore';
+import { useGlyphListStore, getGlyphListStore } from '../glyphListStore';
 import controller from '@/controller/defaultNew';
 import programInit from '@/widget/programNew';
 import TTFManager from '@/widget/TTFManager';
 import projectWidget from '@/widget/project';
-import { useTtfStore } from '@/store/ttfStore';
+import previewerWidget from '@/widget/previewer';
 import i18n from '@/i18n/i18n';
+import actions from '@/controller/actionsNew';
 
 const init = () => {
   if (!programInit.ttfManager) {
@@ -19,13 +22,16 @@ const init = () => {
   programInit.data.projectId =
     window.localStorage.getItem('project-cur') || programInit.project.items()[0].id;
 
+  programInit.previewer = previewerWidget;
+
   controller.init(programInit);
 };
 
 init();
 
-export const [useProgramStore, ProgramStoreProvider] = createStore(() => {
-  const {setTtf} = useTtfStore();
+export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
+  const { setTtf } = useTtfStore();
+  const { setGlyphList } = useGlyphListStore();
   const [program, setProgram] = useState(programInit);
 
   const getProjectId = () => program.data.projectId || program.project.items[0].id;
@@ -53,11 +59,67 @@ export const [useProgramStore, ProgramStoreProvider] = createStore(() => {
         program.ttfManager.set(imported);
         window.localStorage.setItem('project-cur', projectId);
       }
-      setTtf(program.ttfManager.get());
+      setTtf({ ...program.ttfManager.get() });
       return imported;
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const saveProgram = async () => {
+    actions.save(program);
+    setGlyphList([...program.ttfManager.getGlyf()]);
+  };
+
+  const bindProgramEvent = (editor) => {
+    // 保存正在编辑的glyf
+    const saveEditingGlyf = function (editingIndex) {
+      const glyph = editor.getFont();
+      // 如果是正在编辑的
+      if (editingIndex !== -1) {
+
+        program.ttfManager.replaceGlyf(glyph, editingIndex);
+      }
+      // 否则新建font
+      else {
+        program.ttfManager.insertGlyf(glyph);
+      }
+
+      editor.setChanged(false);
+    };
+
+    program.on('save', function (e) {
+      if (!program.ttfManager.get()) return;
+      const { editingIndex } = getGlyphListStore();
+      saveEditingGlyf(editingIndex);
+      saveProgram();
+    })
+      .on('paste', function (e) {
+        let clip = clipboard.get('glyf');
+        if (clip && clip.glyf.length) {
+          if (!editor.isEditing()) {
+            // 触发粘贴
+            // program.viewer.fire('paste');
+          }
+          else {
+            editor.execCommand('addcontours', clip.glyf[0].contours, {
+              selected: true
+            });
+          }
+        }
+      })
+      .on('function', function (e) {
+        // F3, F4
+        if (e.keyCode === 114 || e.keyCode === 115) {
+          let ttf = program.ttfManager.get();
+          if (ttf) {
+            program.previewer.load(ttf, e.keyCode === 114 ? 'ttf' : 'woff');
+          }
+        }
+      })
+      .on('font-error', function (e) {
+        notifyError(e);
+      });
   };
 
   return {
@@ -65,5 +127,7 @@ export const [useProgramStore, ProgramStoreProvider] = createStore(() => {
     setProjectId,
     getProjectId,
     openProject,
+    bindProgramEvent,
+    saveProgram,
   };
 });

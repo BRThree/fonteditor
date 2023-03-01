@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createGlobalStore } from 'hox';
 import { useTtfStore } from '../ttfStore';
 import { useGlyphListStore, getGlyphListStore } from '../glyphListStore';
@@ -25,6 +25,7 @@ const init = () => {
   programInit.previewer = previewerWidget;
 
   controller.init(programInit);
+  programInit.init();
 };
 
 init();
@@ -74,6 +75,9 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
   const bindProgramEvent = (editor) => {
     // 保存正在编辑的glyf
     const saveEditingGlyf = function (editingIndex) {
+      if (!editor) {
+        return;
+      };
       const glyph = editor.getFont();
       // 如果是正在编辑的
       if (editingIndex !== -1) {
@@ -88,38 +92,59 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
       editor.setChanged(false);
     };
 
-    program.on('save', function (e) {
+    const save = function (e) {
+      debugger;
       if (!program.ttfManager.get()) return;
       const { editingIndex } = getGlyphListStore();
       saveEditingGlyf(editingIndex);
       saveProgram();
-    })
-      .on('paste', function (e) {
-        let clip = clipboard.get('glyf');
-        if (clip && clip.glyf.length) {
-          if (!editor.isEditing()) {
-            // 触发粘贴
-            // program.viewer.fire('paste');
-          }
-          else {
-            editor.execCommand('addcontours', clip.glyf[0].contours, {
-              selected: true
-            });
-          }
+    };
+
+    const paste = function (e) {
+      if (!editor) {
+        return;
+      };
+      let clip = clipboard.get('glyf');
+      if (clip && clip.glyf.length) {
+        if (!editor.isEditing()) {
+          // 触发粘贴
+          // program.viewer.fire('paste');
         }
-      })
-      .on('function', function (e) {
-        // F3, F4
-        if (e.keyCode === 114 || e.keyCode === 115) {
-          let ttf = program.ttfManager.get();
-          if (ttf) {
-            program.previewer.load(ttf, e.keyCode === 114 ? 'ttf' : 'woff');
-          }
+        else {
+          editor.execCommand('addcontours', clip.glyf[0].contours, {
+            selected: true
+          });
         }
-      })
-      .on('font-error', function (e) {
-        notifyError(e);
-      });
+      }
+    };
+
+    const func = function (e) {
+      // F3, F4
+      if (e.keyCode === 114 || e.keyCode === 115) {
+        let ttf = program.ttfManager.get();
+        if (ttf) {
+          program.previewer.load(ttf, e.keyCode === 114 ? 'ttf' : 'woff');
+        }
+      }
+    };
+
+    const fontErr = function (e) {
+      notifyError(e);
+    };
+
+    program
+      .on('save', save)
+      .on('paste', paste)
+      .on('function', func)
+      .on('font-error', fontErr);
+
+    return { save, paste, func, fontErr };
+  };
+
+  const cleanProgramEvent = (cleanList) => { 
+    for(const key in cleanList) {
+      program.un(key, cleanList[key]);
+    }
   };
 
   return {
@@ -129,5 +154,6 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
     openProject,
     bindProgramEvent,
     saveProgram,
+    cleanProgramEvent,
   };
 });

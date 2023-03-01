@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo } from 'react';
 import styles from './index.module.scss';
 import Glyph from '@/components/Glyph';
-import CommandMenu from '@/components/CommandMenu';
 import { Col, Row } from 'antd';
 import actions from '@/controller/actionsNew';
 import { useProgramStore } from '@/store/programStore';
@@ -13,7 +12,14 @@ import useNodeBoundingRect from '@/hooks/useNodeBoundingRect';
 function GlyphList() {
   const { program, getProjectId } = useProgramStore();
   const { ttf } = useTtfStore();
-  const { glyphList, setGlyphList, setEditingIndex } = useGlyphListStore();
+  const {
+    selected,
+    glyphList,
+    setGlyphList,
+    setEditingIndex,
+    singleSelect,
+    cleanSelected,
+  } = useGlyphListStore();
   const navigate = useNavigate();
   const [rect, glyphContainer] = useNodeBoundingRect();
 
@@ -24,10 +30,7 @@ function GlyphList() {
 
   useEffect(() => {
     ttf && setGlyphList([...program.ttfManager.getGlyf()]);
-
-    return () => {
-      // setEditingIndex(-1);
-    }
+    cleanSelected();
   }, [ttf]);
 
   const renderGlyphList = () => {
@@ -40,9 +43,11 @@ function GlyphList() {
       return (
         <Col key={`${getProjectId()}-${index}`} span={span}>
           <Glyph
+            isSelected={selected.some((item) => item === index)}
             index={index}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            onClick={() => singleSelect(index)}
             unitsPerEm={unitsPerEm}
             translateY={translateY}
             glyph={item}
@@ -70,7 +75,6 @@ function GlyphList() {
 
   return (
     <div ref={glyphContainer} className={styles['glyph-list']}>
-      <CommandMenu />
       <Row gutter={[8, 8]}>
         {renderGlyphList()}
         <Col span={span}>

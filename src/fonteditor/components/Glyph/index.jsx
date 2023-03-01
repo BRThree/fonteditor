@@ -4,6 +4,7 @@ import glyf2svg from 'fonteditor-core/ttf/util/glyf2svg';
 import { EditOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
 
 function Glyph({
+  isSelected,
   type,
   glyph,
   index,
@@ -13,6 +14,7 @@ function Glyph({
   onEdit = () => {},
   onDelete = () => {},
   onPlus = () => {},
+  onClick = () => {},
 }) {
   const d = glyf2svg(glyph, ttf);
   return type === 'empty' ? (
@@ -20,14 +22,25 @@ function Glyph({
       <PlusOutlined />
     </div>
   ) : (
-    <div className={styles['glyph-container']}>
+    <div
+      onClick={onClick}
+      className={`${styles['glyph-container']} ${
+        isSelected ? styles['glyph-selected'] : ''
+      }`}
+    >
       <div className={styles['opt-box']}>
         <EditOutlined
-          onClick={() => onEdit(index)}
+          onClick={(evt) => {
+            evt.stopPropagation();
+            return onEdit(index);
+          }}
           className={styles['opt-icon']}
         />
         <CloseOutlined
-          onClick={() => onDelete(index)}
+          onClick={(evt) => {
+            evt.stopPropagation();
+            return onDelete(index);
+          }}
           className={styles['opt-icon']}
         />
       </div>

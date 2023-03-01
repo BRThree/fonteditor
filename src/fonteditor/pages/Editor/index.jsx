@@ -23,7 +23,7 @@ function Editor() {
   const [params] = useSearchParams();
   const index = useMemo(() => +Number(params.get('index')), [params]);
   const { ttf } = useTtfStore();
-  const { program, bindProgramEvent } = useProgramStore();
+  const { program, bindProgramEvent, cleanProgramEvent } = useProgramStore();
 
   // 初始化字体
   const initCurGlyph = () => {
@@ -56,7 +56,7 @@ function Editor() {
     });
 
     editor.show(program);
-    bindProgramEvent(editor, index);
+    const cleanList = bindProgramEvent(editor);
     setEditingIndex(index);
 
     setEditorController(editor);
@@ -65,6 +65,7 @@ function Editor() {
       editorMenuDom,
       editorDom,
       editor,
+      cleanList,
     };
   };
 
@@ -78,11 +79,12 @@ function Editor() {
   };
 
   useEffect(() => {
-    let { editorMenuDom, editorDom } = init();
+    let { editorMenuDom, editorDom, cleanList } = init();
 
     return () => {
       editorMenuDom.empty();
       editorDom.empty();
+      cleanProgramEvent(cleanList);
     };
   }, []);
 

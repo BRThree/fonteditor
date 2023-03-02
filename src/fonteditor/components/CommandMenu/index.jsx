@@ -1,43 +1,24 @@
 import { Modal } from 'antd';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
+import items from './static';
 import styles from './index.module.scss';
-import { validate, resetForm } from '@/utils';
+import { validate } from '@/utils';
 import submitStrategy from './submitStrategy';
 import formStrategy from './formStrategy';
+import footerStrategy from './footerStrategy';
 import { useProgramStore } from '@/store/programStore';
-import { useGlyphListStore } from '../../store/glyphListStore';
-
-const items = [
-  {
-    label: '调整位置',
-    key: 'adjust-pos',
-  },
-  {
-    label: '调整字形',
-    key: 'adjust-glyph',
-  },
-  {
-    label: '字形信息',
-    key: 'setting-font',
-  },
-  {
-    label: '导出字形',
-    key: 'export',
-  },
-  {
-    label: '设置代码点',
-    key: 'set',
-  },
-];
+import { useGlyphListStore } from '@/store/glyphListStore';
 
 function CommandMenu() {
+  const { program } = useProgramStore();
+  const { setGlyphList, selGlyphs } = useGlyphListStore();
   const [curKey, setCurKey] = useState('');
   const [curTitle, setTitle] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const form = useRef(null);
 
-  const { program } = useProgramStore();
-  const { setGlyphList } = useGlyphListStore();
+  const oneSelected = useMemo(() => selGlyphs.length === 1, [selGlyphs]);
+  const hasSelected = useMemo(() => selGlyphs.length > 0, [selGlyphs]);
 
   const handleClick = (key, title) => {
     setCurKey(key);
@@ -63,11 +44,23 @@ function CommandMenu() {
 
   return (
     <ul className={styles['command-menu-container']}>
-      {items.map(({ label, key }) => (
-        <li onClick={() => handleClick(key, label)} key={key}>
-          {label}
-        </li>
-      ))}
+      {items.map(({ label, key, needSelOne }) => {
+        return needSelOne ? (
+          <li onClick={() => handleClick(key, label)} key={key}>
+            {label}
+            {!oneSelected && (
+              <div
+                onClick={(evt) => evt.stopPropagation()}
+                className={styles['disabled']}
+              />
+            )}
+          </li>
+        ) : (
+          <li onClick={() => handleClick(key, label)} key={key}>
+            {label}
+          </li>
+        );
+      })}
 
       <Modal
         title={curTitle}
@@ -77,6 +70,11 @@ function CommandMenu() {
         okText="确定"
         cancelText="取消"
         destroyOnClose
+        footer={
+          footerStrategy[curKey]
+            ? footerStrategy[curKey]()
+            : footerStrategy.default()
+        }
       >
         {formStrategy[curKey]
           ? formStrategy[curKey](form)

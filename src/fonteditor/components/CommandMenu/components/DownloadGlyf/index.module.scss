@@ -1,0 +1,35 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  .header {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .main {
+    position: relative;
+    .glyph {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      z-index: 3;
+    }
+    &::after {
+      content: '';
+      display: block;
+      padding-top: 100%;
+    }
+  }
+
+  .footer {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+}

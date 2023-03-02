@@ -17,5 +17,14 @@ export default {
         let { selected } = getGlyphListStore();
         program.ttfManager.updateGlyf(form, selected[0]);
     },
-    'default': () => {},
+    'setting-unicode': function ({ unicode, isGenerateName }) {
+        const { program } = getProgramStore();
+        let { selected } = getGlyphListStore();
+        setTimeout(function () {
+            if (program.ttfManager.get()) {
+                program.ttfManager.setUnicode(unicode, selected, isGenerateName);
+            }
+        }, 20);
+    },
+    'default': () => { },
 };

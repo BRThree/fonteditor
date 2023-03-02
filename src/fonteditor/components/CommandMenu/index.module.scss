@@ -8,10 +8,22 @@
     padding: 0 12px;
     cursor: pointer;
     line-height: 46px;
-    transition: .3s;
+    transition: 0.3s;
+    position: relative;
 
     &:hover {
-      background-color: rgba($color: #000000, $alpha: .2);
+      background-color: rgba($color: #000000, $alpha: 0.2);
+    }
+
+    .disabled {
+      background-color: rgba(255, 255, 255, 0.5);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      cursor: not-allowed;
     }
   }
 }

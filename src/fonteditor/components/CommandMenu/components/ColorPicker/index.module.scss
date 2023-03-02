@@ -1,0 +1,15 @@
+.container {
+  position: relative;
+  z-index: 10000;
+  .color-picker {
+    position: absolute;
+    top: calc(100% + 10px);
+  }
+  .emitter {
+    padding: 4px 8px;
+    border-radius: 10px;
+    display: inline-block;
+    color: #c9c9c9;
+    cursor: pointer;
+  }
+}

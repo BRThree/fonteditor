@@ -1,0 +1,35 @@
+.opt-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 100%;
+  .opt-group {
+    display: flex;
+    flex-direction: row;
+    border-right: 1px solid #494949;
+    padding: 0 10px;
+    color: white;
+
+    .m-btn {
+      .m-btn-text {
+        color: rgb(230, 230, 230);
+      }
+      &:hover {
+        background-color: rgba(230, 230, 230, .2);
+      }
+    }
+
+    
+
+    .s-btn {
+      .s-btn-text {
+        font-size: 12px;
+      }
+      margin: 0 5px;
+    }
+  }
+
+  .opt-group-last {
+    border-right: none;
+  }
+}

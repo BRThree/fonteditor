@@ -7,6 +7,8 @@ import programInit from '@/widget/programNew';
 import TTFManager from '@/widget/TTFManager';
 import projectWidget from '@/widget/project';
 import previewerWidget from '@/widget/previewer';
+import loaderWidget from '@/widget/loader';
+import exporterWidget from '@/widget/exporter';
 import i18n from '@/i18n/i18n';
 import actions from '@/controller/actionsNew';
 
@@ -24,6 +26,10 @@ const init = () => {
 
   programInit.previewer = previewerWidget;
 
+  // 导入导出器
+  programInit.loader = loaderWidget;
+  programInit.exporter = exporterWidget;
+
   controller.init(programInit);
   programInit.init();
 };
@@ -35,7 +41,9 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
   const { setGlyphList } = useGlyphListStore();
   const [program, setProgram] = useState(programInit);
 
-  const getProjectId = () => program.data.projectId || program.project.items[0].id;
+  const getProjectId = () => {
+    return program.data.projectId || program.project.items()[0].id;
+  };
 
   const setProjectId = (projectId) => {
     setProgram({
@@ -141,8 +149,8 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
     return { save, paste, func, fontErr };
   };
 
-  const cleanProgramEvent = (cleanList) => { 
-    for(const key in cleanList) {
+  const cleanProgramEvent = (cleanList) => {
+    for (const key in cleanList) {
       program.un(key, cleanList[key]);
     }
   };

@@ -174,12 +174,11 @@ actions = {
           }, function () {
             program.loading.show(i18n.lang.msg_save_failed, 1000);
           });
-
       }
       // 未保存的项目
       else {
         let name = program.ttfManager.get().name.fontFamily || '';
-        if ((name = func())) {
+        if ((name = func ? func() : window.prompt(i18n.lang.msg_input_proj_name, name))) {
           name = string.encodeHTML(name);
           options = options || {};
           const id = await program.project.add(
@@ -197,11 +196,11 @@ actions = {
   },
 
   'add-new'(program, selected = []) {
-    if(!program) return;
+    if (!program) return;
     if (program.ttfManager.get()) {
       program.ttfManager.insertGlyf({}, selected[0]);
     } else {
-      throw(new Error('没有项目，请新建或导入一个项目'));
+      throw (new Error('没有项目，请新建或导入一个项目'));
     }
   },
 

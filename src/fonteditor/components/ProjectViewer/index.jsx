@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styles from './index.module.scss';
 import { Button, Menu, Modal, Form, Input } from 'antd';
 import { useProgramStore } from '@/store/programStore';
 import ProjectItems from './components/ProjectItems';
-import { FileAddOutlined, FolderOpenOutlined } from '@ant-design/icons';
+import OpenFile from './components/OpenFile';
+import { FileAddOutlined } from '@ant-design/icons';
 import { validate, resetForm } from '@/utils';
 import actions from '@/controller/actionsNew';
 
-function ProjectViewer({hidden = false}) {
+function ProjectViewer({ hidden = false }) {
   const [asideMenus, setAsideMenus] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState([]);
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
@@ -68,8 +69,6 @@ function ProjectViewer({hidden = false}) {
     setIsProjectFormOpen(true);
   };
 
-  const handleOpenFile = () => {};
-
   const handleCloseProject = () => {
     setIsProjectFormOpen(false);
     resetForm(formRef?.current);
@@ -101,13 +100,7 @@ function ProjectViewer({hidden = false}) {
         >
           新建
         </Button>
-        <Button
-          onClick={handleOpenFile}
-          type="primary"
-          icon={<FolderOpenOutlined />}
-        >
-          打开
-        </Button>
+        <OpenFile>打开</OpenFile>
       </div>
       <Menu
         selectedKeys={selectedKeys}
@@ -137,7 +130,7 @@ function ProjectViewer({hidden = false}) {
     </div>
   ) : (
     <></>
-  )
+  );
 }
 
 export default ProjectViewer;

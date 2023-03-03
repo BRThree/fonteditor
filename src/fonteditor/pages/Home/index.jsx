@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Layout } from 'antd';
-import ScrollBar from 'react-custom-scrollbars';
 import styles from './index.module.scss';
 import GlyphList from '@/components/GlyphList';
 import ProjectViewer from '@/components/ProjectViewer';
@@ -24,10 +23,8 @@ const Home = () => {
         <ProjectViewer />
       </Sider>
       <Content className={styles['main']}>
-        <ScrollBar autoHide className={styles['scroll-bar']}>
-          <CommandMenu />
-          <GlyphList />
-        </ScrollBar>
+        <CommandMenu />
+        <GlyphList style={{ height: 'calc(100% - 46px)' }} />
       </Content>
     </Layout>
   );

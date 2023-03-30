@@ -47,6 +47,7 @@ function ProjectViewer({ hidden = false }) {
     menuInit(undefined, curProject);
     await program.project.ready();
     openProject(curProject);
+    setProjectId(curProject);
   };
 
   const handleSelectMenuItem = async ({ key }) => {

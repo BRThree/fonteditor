@@ -1,0 +1,62 @@
+.container {
+  position: relative;
+  .file-picker {
+    display: none;
+  }
+}
+
+.form-container {
+  height: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .form-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    span {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+    }
+  }
+
+  .form-main {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    .origin,
+    .fit {
+      flex-grow: 1;
+    }
+    .origin {
+      border-right: 1px solid rgb(230, 230, 230);
+    }
+  }
+
+  .form-footer {
+    .part {
+      .title {
+        font-size: 16px;
+        font-weight: bolder;
+      }
+    }
+  }
+}
+
+.mr8 {
+  margin-right: 8px;
+}
+
+.inline {
+  display: flex;
+  flex-direction: row;
+  gap: 8px
+}
+
+.slider {
+  width: 150px;
+}

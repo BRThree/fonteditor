@@ -7,15 +7,16 @@ import CommandMenu from '@/components/CommandMenu';
 import { useProgramStore } from '@/store/programStore';
 const { Content, Sider } = Layout;
 
-const Home = () => {
-  const { bindProgramEvent, cleanProgramEvent } = useProgramStore();
+let cleanList = [];
 
+const Home = () => {
+  const { bindProgramEvent, cleanProgramEvent, program } = useProgramStore();
+
+  // program 更新重新绑定事件
   useEffect(() => {
-    const cleanList = bindProgramEvent();
-    return () => {
-      cleanProgramEvent(cleanList);
-    };
-  }, []);
+    cleanProgramEvent(cleanList);
+    cleanList = bindProgramEvent();
+  }, [program])
 
   return (
     <Layout className={styles['main-layout']}>

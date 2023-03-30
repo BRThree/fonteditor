@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createGlobalStore } from 'hox';
 import { useTtfStore } from '../ttfStore';
 import { useGlyphListStore, getGlyphListStore } from '../glyphListStore';
@@ -21,8 +21,13 @@ const init = () => {
     programInit.project = projectWidget;
   }
 
-  programInit.data.projectId =
-    window.localStorage.getItem('project-cur') || programInit.project.items()[0].id;
+  if (programInit.project.items() > 0) {
+    programInit.data.projectId =
+      window.localStorage.getItem('project-cur') || programInit.project.items()[0].id;
+  } else {
+    programInit.data.projectId = null;
+  }
+
 
   programInit.previewer = previewerWidget;
 
@@ -101,7 +106,6 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
     };
 
     const save = function (e) {
-      debugger;
       if (!program.ttfManager.get()) return;
       const { editingIndex } = getGlyphListStore();
       saveEditingGlyf(editingIndex);

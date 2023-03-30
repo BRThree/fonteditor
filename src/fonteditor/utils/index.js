@@ -10,3 +10,5 @@ export const validate = async (formRef) => {
 export const resetForm = async (formRef) => {
   formRef?.resetFields();
 };
+
+export const notNul = (val) => val !== '' && val !== undefined && val !== null;

@@ -1,35 +1,38 @@
 import React from 'react';
 import { Dropdown, Space, Button } from 'antd';
 import { DownOutlined, DownloadOutlined } from '@ant-design/icons';
+import ImportDrop from './components/ImportDrop';
 import styles from './index.module.scss';
 
-const importItems = [
-  { label: '导入图片', key: 'import-pic' },
-  { label: '加载线上字体', key: 'add-online' },
-  { label: '从URL加载字体', key: 'add-url' },
-  { label: '从同步服务器字体', key: 'sync-from-server' },
+const toolItems = [
+  { label: '生成字形名称', key: 'setting-glyf-name' },
+  { label: '清除字形名称', key: 'setting-glyf-clearname' },
+  { label: '优化字体', key: 'setting-optimize' },
+  { label: '按代码点进行排序', key: 'setting-sort' },
+  { label: '复合字形转简单字形', key: 'setting-compound2simple' },
+];
+
+const settingItems = [
+  { label: '字体信息', key: 'setting-name' },
+  { label: '字体度量', key: 'setting-metrics' },
+  { label: '编辑器设置', key: 'setting-editor' },
+  { label: '导入和导出', key: 'setting-import-and-export' },
+];
+
+const previewItems = [
+  { label: 'ttf字体', key: 'ttf' },
+  { label: 'woff2字体', key: 'woff2' },
+  { label: 'woff字体', key: 'woff' },
 ];
 
 function Option() {
   return (
     <div className={styles['opt-container']}>
       <div className={styles['opt-group']}>
+        <ImportDrop />
         <Dropdown
           menu={{
-            items: importItems,
-          }}
-          trigger="click"
-        >
-          <Button className={styles['m-btn']} type="text">
-            <Space className={styles['m-btn-text']}>
-              导入
-              <DownOutlined />
-            </Space>
-          </Button>
-        </Dropdown>
-        <Dropdown
-          menu={{
-            items: importItems,
+            items: toolItems,
           }}
           trigger="click"
         >
@@ -42,7 +45,7 @@ function Option() {
         </Dropdown>
         <Dropdown
           menu={{
-            items: importItems,
+            items: settingItems,
           }}
           trigger="click"
         >
@@ -83,7 +86,7 @@ function Option() {
       <div className={`${styles['opt-group']} ${styles['opt-group-last']}`}>
         <Dropdown
           menu={{
-            items: importItems,
+            items: previewItems,
           }}
           trigger="click"
         >

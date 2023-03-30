@@ -15,6 +15,8 @@ import ProjectViewer from '@/components/ProjectViewer';
 import { useProgramStore } from '@/store/programStore';
 import { useGlyphListStore } from '../../store/glyphListStore';
 
+let cleanList = [];
+
 function Editor() {
   const [editorController, setEditorController] = useState(null);
   const [isResizing, setIsResizing] = useState(false);
@@ -56,7 +58,6 @@ function Editor() {
     });
 
     editor.show(program);
-    const cleanList = bindProgramEvent(editor);
     setEditingIndex(index);
 
     setEditorController(editor);
@@ -65,7 +66,6 @@ function Editor() {
       editorMenuDom,
       editorDom,
       editor,
-      cleanList,
     };
   };
 
@@ -79,14 +79,19 @@ function Editor() {
   };
 
   useEffect(() => {
-    let { editorMenuDom, editorDom, cleanList } = init();
+    let { editorMenuDom, editorDom } = init();
 
     return () => {
       editorMenuDom.empty();
       editorDom.empty();
-      cleanProgramEvent(cleanList);
     };
   }, []);
+  
+  // program 更新重新绑定事件
+  useEffect(() => {
+    cleanProgramEvent(cleanList);
+    cleanList = bindProgramEvent();
+  }, [program])
 
   useEffect(() => {
     ttf && editorController && initCurGlyph()

@@ -28,23 +28,23 @@ function OpenFile({ children }) {
           // 清除projectId
           program.data.projectId = null;
           setProjectId(null);
-          debugger;
         },
       });
     }
   };
 
-  const handleClick = () => {
-    filePicker.current.click();
-  };
-
   const fileChange = (evt) => {
     loadFiles(evt.target.files);
   };
+
+  const openFilePicker = () => {
+    filePicker.current.click();
+  };
+
   return (
     <div className={styles['container']}>
       <Button
-        onClick={handleClick}
+        onClick={openFilePicker}
         className={styles['file-btn']}
         icon={<FolderOpenOutlined />}
       >

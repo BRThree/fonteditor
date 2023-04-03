@@ -4,7 +4,17 @@ import { useProgramStore } from '@/store/programStore';
 import { useTtfStore } from '@/store/ttfStore';
 import { useGlyphListStore } from '@/store/glyphListStore';
 import glyfAdjust from 'fonteditor-core/ttf/util/glyfAdjust';
-import { message, Modal, Button, Form, Slider, Select, Checkbox } from 'antd';
+import {
+  message,
+  Modal,
+  Button,
+  Form,
+  Slider,
+  Select,
+  Checkbox,
+  Popconfirm,
+  Input,
+} from 'antd';
 import useDebounce from '@/hooks/useDebounce';
 
 import pixelRatio from 'common/getPixelRatio';
@@ -16,13 +26,15 @@ import ContourPointsProcessor from 'graphics/image/ContourPointsProcessor';
 import getHistogram from 'graphics/image/util/getHistogram';
 import getThreshold from 'graphics/image/util/getThreshold';
 import pathsUtil from 'graphics/pathsUtil';
+import { validate, resetForm } from '@/utils';
+import ScrollBar from 'react-custom-scrollbars';
 
 import { notNul } from '@/utils/index.js';
 
 function ImportFiles() {
   const filePicker = useRef(null);
+  const urlForm = useRef(null);
   const origin = useRef(null);
-  processImage;
   const fit = useRef(null);
 
   const { program } = useProgramStore();
@@ -36,6 +48,9 @@ function ImportFiles() {
   const [gaussBlur, setGaussBlur] = useState(0);
   const [contrast, setContrast] = useState(0);
   const [smooth, setSmooth] = useState(true);
+  const [fixWindows, setFixWindows] = useState(false);
+  const [viewOrigin, setViewOrigin] = useState(true);
+  const [viewFit, setViewFit] = useState(true);
 
   const debSetThreshold = useDebounce((val) => {
     if (!isReady()) return;
@@ -294,7 +309,6 @@ function ImportFiles() {
   }, 100);
   useEffect(() => {
     preProcessChange();
-    console.log(reverse, gaussBlur, contrast);
   }, [reverse, gaussBlur, contrast]);
 
   // 灰度值类型改变
@@ -342,6 +356,21 @@ function ImportFiles() {
     refreshCanvasOrigin();
   };
 
+  // 从url导入图片
+  const urlSubmit = async () => {
+    const res = await validate(urlForm.current);
+
+    let image = new Image();
+    image.crossOrigin = 'anonymous';
+    image.onload = function () {
+      updateImage(image);
+    };
+    image.onerror = function () {
+      program.loading.warn(i18n.lang.msg_read_pic_error, 2000);
+    };
+    image.src = res.value;
+  };
+
   // 初始化
   useEffect(() => {
     program.data.imageProcessor = new ImageProcessor();
@@ -372,6 +401,7 @@ function ImportFiles() {
         cancelText="取消"
         okText="确定"
         width={960}
+        destroyOnClose
       >
         <div className={styles['form-container']}>
           {/* 头部 */}
@@ -383,20 +413,73 @@ function ImportFiles() {
               请选择字形图片，支持jpg、gif、png、bmp、svg。
             </span>
             <span>
-              <Button type="primary">从URL导入图片</Button>
-              <Button type="primary">适应窗口</Button>
-              <Button type="primary">查看原图</Button>
-              <Button type="primary">查看轮廓</Button>
+              <Popconfirm
+                placement="bottom"
+                title="请输入图片地址"
+                description={
+                  <Form ref={(r) => (urlForm.current = r)} autoComplete="off">
+                    <Form.Item
+                      label="图片地址"
+                      name="value"
+                      rules={[
+                        {
+                          required: true,
+                          message: '请输入图片地址',
+                        },
+                        {
+                          type: 'url',
+                          message: '请输入正确的图片地址',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
+                  </Form>
+                }
+                onConfirm={urlSubmit}
+              >
+                <Button type="primary">从URL导入图片</Button>
+              </Popconfirm>
+              <Checkbox
+                checked={fixWindows}
+                onChange={(e) => setFixWindows(e.target.checked)}
+              >
+                适应窗口
+              </Checkbox>
+              <Checkbox
+                checked={viewOrigin}
+                onChange={(e) => setViewOrigin(e.target.checked)}
+              >
+                查看原图
+              </Checkbox>
+              <Checkbox
+                checked={viewFit}
+                onChange={(e) => setViewFit(e.target.checked)}
+              >
+                查看轮廓
+              </Checkbox>
             </span>
           </div>
           {/* 主要内容 */}
           <div className={styles['form-main']}>
-            <div className={styles['origin']}>
-              <canvas ref={(r) => (origin.current = r)} />
-            </div>
-            <div className={styles['fit']}>
-              <canvas ref={(r) => (fit.current = r)} />
-            </div>
+            <ScrollBar
+              className={`${styles['origin']} ${
+                viewOrigin ? '' : styles['hidden']
+              }`}
+            >
+              <canvas
+                className={fixWindows ? styles['fix-windows'] : ''}
+                ref={(r) => (origin.current = r)}
+              />
+            </ScrollBar>
+            <ScrollBar
+              className={`${styles['fit']} ${viewFit ? '' : styles['hidden']}`}
+            >
+              <canvas
+                className={fixWindows ? styles['fix-windows'] : ''}
+                ref={(r) => (fit.current = r)}
+              />
+            </ScrollBar>
           </div>
           {/* 脚部 */}
           <div className={styles['form-footer']}>

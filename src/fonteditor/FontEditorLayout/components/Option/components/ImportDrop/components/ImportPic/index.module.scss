@@ -35,6 +35,11 @@
     .origin {
       border-right: 1px solid rgb(230, 230, 230);
     }
+
+    .fix-windows {
+      max-width: 100%;
+      max-height: 100%;
+    }
   }
 
   .form-footer {
@@ -54,9 +59,13 @@
 .inline {
   display: flex;
   flex-direction: row;
-  gap: 8px
+  gap: 8px;
 }
 
 .slider {
   width: 150px;
+}
+
+.hidden {
+  display: none;
 }

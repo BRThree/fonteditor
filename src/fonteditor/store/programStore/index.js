@@ -140,6 +140,26 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
       }
     };
 
+    /**
+     * 通知错误信息
+     *
+     * @param  {Object} options 参数
+     * @param  {number} options.number 错误号
+     * @param  {Object} options.data 错误数据
+     */
+    function notifyError(options) {
+      // 重复的代码点
+      if (options.number === 10200 && options.data) {
+        let glyfList = Array.isArray(options.data) ? options.data : [options.data];
+        // TODO: 获取页面大小
+
+        // TODO: 获取当前页
+
+        // TODO: 显示当前页
+
+      }
+    }
+
     const fontErr = function (e) {
       notifyError(e);
     };

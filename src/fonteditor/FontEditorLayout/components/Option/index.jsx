@@ -2,15 +2,8 @@ import React from 'react';
 import { Dropdown, Space, Button } from 'antd';
 import { DownOutlined, DownloadOutlined } from '@ant-design/icons';
 import ImportDrop from './components/ImportDrop';
+import ToolDrop from "./components/ToolDrop";
 import styles from './index.module.scss';
-
-const toolItems = [
-  { label: '生成字形名称', key: 'setting-glyf-name' },
-  { label: '清除字形名称', key: 'setting-glyf-clearname' },
-  { label: '优化字体', key: 'setting-optimize' },
-  { label: '按代码点进行排序', key: 'setting-sort' },
-  { label: '复合字形转简单字形', key: 'setting-compound2simple' },
-];
 
 const settingItems = [
   { label: '字体信息', key: 'setting-name' },
@@ -30,19 +23,7 @@ function Option() {
     <div className={styles['opt-container']}>
       <div className={styles['opt-group']}>
         <ImportDrop />
-        <Dropdown
-          menu={{
-            items: toolItems,
-          }}
-          trigger="click"
-        >
-          <Button className={styles['m-btn']} type="text">
-            <Space className={styles['m-btn-text']}>
-              工具
-              <DownOutlined />
-            </Space>
-          </Button>
-        </Dropdown>
+        <ToolDrop />
         <Dropdown
           menu={{
             items: settingItems,

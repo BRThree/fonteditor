@@ -63,6 +63,12 @@
 }
 }
 
+.edit,.new {
+  .path {
+    fill: blue !important;
+  }
+}
+
 .glyph-empty {
   height: 180px;
   width: 100%;

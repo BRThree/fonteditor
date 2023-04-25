@@ -70,6 +70,7 @@
   "license": "MIT",
   "dependencies": {
     "antd": "^5.1.7",
+    "dayjs": "^1.11.7",
     "hox": "^2.1.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

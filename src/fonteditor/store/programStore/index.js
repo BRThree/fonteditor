@@ -11,6 +11,7 @@ import loaderWidget from '@/widget/loader';
 import exporterWidget from '@/widget/exporter';
 import i18n from '@/i18n/i18n';
 import actions from '@/controller/actionsNew';
+import settingmanager from '@/widget/settingmanager';
 
 const init = () => {
   if (!programInit.ttfManager) {
@@ -19,6 +20,10 @@ const init = () => {
 
   if (!programInit.project) {
     programInit.project = projectWidget;
+  }
+
+  if(!programInit.setting || !Object.keys(programInit.setting).length) {
+    programInit.setting = settingmanager;
   }
 
   if (programInit.project.items() > 0) {
@@ -81,8 +86,11 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
   };
 
   const saveProgram = async () => {
-    actions.save(program);
-    setGlyphList([...program.ttfManager.getGlyf()]);
+    const newProgram = await actions.save(program);
+
+    if(Object.prototype.toString.call(newProgram).slice(8, -1) !== 'String') {
+      setGlyphList([...newProgram.ttfManager.getGlyf()]);
+    }
   };
 
   const bindProgramEvent = (editor) => {
@@ -109,7 +117,8 @@ export const [useProgramStore, getProgramStore] = createGlobalStore(() => {
       if (!program.ttfManager.get()) return;
       const { editingIndex } = getGlyphListStore();
       saveEditingGlyf(editingIndex);
-      saveProgram();
+      saveProgram().then(() => {
+      });
     };
 
     const paste = function (e) {

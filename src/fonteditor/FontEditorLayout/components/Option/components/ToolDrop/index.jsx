@@ -8,7 +8,7 @@ import i18n from "@/i18n/i18n";
 
 function ToolDrop() {
     const {program} = useProgramStore();
-    const {selected} = useGlyphListStore();
+    const {selected, setGlyphList} = useGlyphListStore();
 
     const toolItems = [
         {label: '生成字形名称', key: 'setting-glyf-name'},
@@ -18,6 +18,7 @@ function ToolDrop() {
         {label: '复合字形转简单字形', key: 'setting-compound2simple'},
     ];
 
+    // 选项点击策略模式
     const itemActions = {
         'setting-glyf-name': () => {
             if (window.confirm(i18n.lang.msg_confirm_gen_names)) {
@@ -50,10 +51,13 @@ function ToolDrop() {
         },
     };
 
+    // 选项点击
     const itemClick = (item) => {
         if (!program.ttfManager.get()) return;
 
         itemActions[item.key]();
+
+        setGlyphList([...program.ttfManager.getGlyf()]);
     }
 
     return (

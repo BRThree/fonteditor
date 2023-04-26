@@ -51,7 +51,7 @@ export default function drawAxis(ctx, config) {
         ctx.stroke();
     }
 
-    // metrics
+    // SetMetrics
     ctx.beginPath();
     ctx.strokeStyle = config.metricsColor || '#FF6E67';
     // 绘制辅助线

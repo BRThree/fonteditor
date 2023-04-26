@@ -166,14 +166,9 @@ actions = {
       // 已经保存过的项目
       let projectId = program.data.projectId;
       if (projectId) {
-        program.project.update(projectId, program.ttfManager.get())
-          .then(function () {
-            program.ttfManager.setState('saved');
-            program.loading.show(i18n.lang.msg_save_success, 400);
-            actions.dosync(program);
-          }, function () {
-            program.loading.show(i18n.lang.msg_save_failed, 1000);
-          });
+        await program.project.update(projectId, program.ttfManager.get())
+        program.ttfManager.setState('saved');
+        return program;
       }
       // 未保存的项目
       else {

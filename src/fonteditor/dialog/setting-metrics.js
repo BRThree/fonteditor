@@ -51,7 +51,7 @@ export default setting.derive({
         this.setFields(setting);
 
         let me = this;
-        $('#setting-calc-metrics').on('click', function (e) {
+        $('#setting-calc-SetMetrics').on('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
             let metrics = program.ttfManager.calcMetrics();
@@ -59,7 +59,7 @@ export default setting.derive({
         });
     },
     onDispose() {
-        $('#setting-calc-metrics').off('click');
+        $('#setting-calc-SetMetrics').off('click');
     },
     validate() {
         let setting = this.getFields();

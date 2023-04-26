@@ -21,13 +21,14 @@ core.woff2.init('dep/woff2/woff2.wasm');
  *
  * @param {Object} ttf ttf字体结构
  * @param {Object} options 参数
+ * @param program
  * @param {Object} options.type 文件类型
  *
  * @return {Binary} base64 font file
  */
-function writefont(ttf, options) {
+function writefont(ttf, options, program) {
     options.type = options.type || 'ttf';
-    ttf = resolvettf(ttf, options);
+    ttf = resolvettf(ttf, options, program);
     return font.create(ttf).write(options);
 }
 
@@ -35,13 +36,14 @@ function writefont(ttf, options) {
  * 导出SFNT结构字体
  *
  * @param {Object} ttf ttf字体结构
- * @param {Object} options 参数
+ * @param {{type, error(*): void}} options 参数
+ * @param program
  * @param {Object} options.type 文件类型
  * @param {Object} options.fileName 文件名
  * @param {Function} options.success 成功回调
  * @param {Function} options.error 失败回调
  */
-function exportFile(ttf, options) {
+function exportFile(ttf, options, program) {
 
     if (ttf) {
 
@@ -61,7 +63,7 @@ function exportFile(ttf, options) {
                     let name = fileName + '.' + fileType;
                     let content = writefont(ttf, {
                         type: fileType
-                    });
+                    }, program);
                     if (fileType === 'symbol') {
                         name = fileName + '-symbol.svg';
                         symbolText = content;
@@ -105,7 +107,7 @@ function exportFile(ttf, options) {
 
             }
             else {
-                let buffer = writefont(ttf, options);
+                let buffer = writefont(ttf, options, program);
                 base64Str = font.toBase64(buffer);
 
                 base64Str = 'data:font/'

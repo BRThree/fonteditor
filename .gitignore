@@ -22,3 +22,9 @@ demo/sync/*.svg
 dep/fonteditor-core
 
 dist
+/.idea/.gitignore
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/fonteditor.iml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml

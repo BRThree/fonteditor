@@ -4,6 +4,7 @@
   .color-picker {
     position: absolute;
     top: calc(100% + 10px);
+    z-index: 10000;
   }
   .emitter {
     padding: 4px 8px;

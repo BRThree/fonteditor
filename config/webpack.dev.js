@@ -19,7 +19,17 @@ module.exports = {
     },
     devtool: 'inline-source-map',
     devServer: {
-        contentBase: './'
+        contentBase: './',
+        proxy: {
+            '/api': {
+                target: 'http://localhost:8089/',
+                changeOrigin: true,
+                ws: false,
+                pathRewrite: {
+                    '^/api': '/'
+                },
+            }
+        }
     },
     resolve: {
         extensions: ['.js', '.jsx', '.json'],
@@ -122,41 +132,41 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-              test: /\.module\.s(a|c)ss$/,
-              loader: [
-                'style-loader',
-                {
-                  loader: 'css-loader',
-                  options: {
-                    modules: true,
-                    sourceMap: true
-                  }
-                },
-                {
-                  loader: 'sass-loader',
-                  options: {
-                    sourceMap: true
-                  }
-                }
-              ]
+                test: /\.module\.s(a|c)ss$/,
+                loader: [
+                    'style-loader',
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                            sourceMap: true
+                        }
+                    },
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    }
+                ]
             },
             {
-              test: /\.s(a|c)ss$/,
-              exclude: /\.module.(s(a|c)ss)$/,
-              loader: [
-                'style-loader',
-                'css-loader',
-                {
-                  loader: 'sass-loader',
-                  options: {
-                    sourceMap: true
-                  }
-                }
-              ]
+                test: /\.s(a|c)ss$/,
+                exclude: /\.module.(s(a|c)ss)$/,
+                loader: [
+                    'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true
+                        }
+                    }
+                ]
             }
         ]
     },
     resolveLoader: {
         modules: [path.resolve(__dirname, '../build'), 'node_modules']
-    }
+    },
 };

@@ -4,12 +4,13 @@ import { Dropdown, Space, Button } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import ImportFiles from './components/ImportFiles';
 import ImportPic from './components/ImportPic';
+import AddOnline from './components/AddOnline';
 
 function ImportDrop() {
   const importItems = [
-    { label: (<ImportFiles />), key: 'import-files' },
-    { label: (<ImportPic />), key: 'import-pic' },
-    { label: '加载线上字体', key: 'add-online' },
+    { label: <ImportFiles />, key: 'import-files' },
+    { label: <ImportPic />, key: 'import-pic' },
+    { label: <AddOnline />, key: 'add-online' },
     { label: '从URL加载字体', key: 'add-url' },
     { label: '从同步服务器字体', key: 'sync-from-server' },
   ];

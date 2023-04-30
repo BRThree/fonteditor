@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import styles from './index.module.scss';
 import { useProgramStore } from '@/store/programStore';
-import { useTtfStore } from '@/store/ttfStore';
 import { useGlyphListStore } from '@/store/glyphListStore';
 import glyfAdjust from 'fonteditor-core/ttf/util/glyfAdjust';
 import {
@@ -18,15 +17,13 @@ import {
 import useDebounce from '@/hooks/useDebounce';
 
 import pixelRatio from 'common/getPixelRatio';
-import string from 'common/string';
-import lang from 'common/lang';
 import drawPath from 'render/util/drawPath';
 import ImageProcessor from 'graphics/image/ImageProcessor';
 import ContourPointsProcessor from 'graphics/image/ContourPointsProcessor';
 import getHistogram from 'graphics/image/util/getHistogram';
 import getThreshold from 'graphics/image/util/getThreshold';
 import pathsUtil from 'graphics/pathsUtil';
-import { validate, resetForm } from '@/utils';
+import { validate } from '@/utils';
 import ScrollBar from 'react-custom-scrollbars';
 
 import { notNul } from '@/utils/index.js';

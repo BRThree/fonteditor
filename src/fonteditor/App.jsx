@@ -7,7 +7,6 @@ import {createHashRouter, RouterProvider} from "react-router-dom";
 import routes from "./routers";
 
 const router = createHashRouter(routes);
-console.log(router);
 
 const App = () => {
   return (

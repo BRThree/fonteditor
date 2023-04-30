@@ -73,7 +73,7 @@ function GlyphList({ style = {} }) {
 
   const handleEdit = (index) => {
     setEditingIndex(index);
-    navigate(`/editor?index=${index}`);
+    navigate(`/index/editor?index=${index}`);
   };
 
   const handleDelete = (index) => {

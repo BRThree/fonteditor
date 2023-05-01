@@ -10,9 +10,9 @@ function ImportDrop() {
   const importItems = [
     { label: <ImportFiles />, key: 'import-files' },
     { label: <ImportPic />, key: 'import-pic' },
-    { label: <AddOnline />, key: 'add-online' },
-    { label: '从URL加载字体', key: 'add-url' },
-    { label: '从同步服务器字体', key: 'sync-from-server' },
+    // { label: <AddOnline />, key: 'add-online' },
+    // { label: '从URL加载字体', key: 'add-url' },
+    // { label: '从同步服务器字体', key: 'sync-from-server' },
   ];
   return (
     <Dropdown

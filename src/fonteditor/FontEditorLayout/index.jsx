@@ -4,6 +4,7 @@ import styles from './index.module.scss';
 import Logo from './components/Logo';
 import Option from './components/Option';
 import {Layout} from 'antd';
+import AvatarComp from "./components/AvatarComp";
 
 const {Header, Content, Footer} = Layout;
 
@@ -13,6 +14,7 @@ function FontEditorLayout() {
             <Header className={styles['header']}>
                 <Logo/>
                 <Option/>
+                <AvatarComp/>
             </Header>
             <Content className={styles['content']}>
                 <Outlet/>

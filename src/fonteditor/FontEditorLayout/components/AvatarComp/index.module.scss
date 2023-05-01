@@ -1,0 +1,12 @@
+.avatar-box {
+  margin-left: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .m-btn {
+    .m-btn-text {
+      color: rgb(230, 230, 230);
+    }
+  }
+}

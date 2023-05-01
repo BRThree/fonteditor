@@ -1,9 +1,10 @@
 import Home from '@/pages/Home';
 import Editor from '@/pages/Editor';
 import Login from "@/pages/Login";
-import React from 'react';
-import { Navigate } from 'react-router-dom'
-import FontEditorLayout from "../FontEditorLayout";
+import {Navigate} from 'react-router-dom'
+import FontEditorLayout from "../FontEditorLayout"
+import AuthRouter from "./AuthRouter.js"
+import React from "react"
 
 export const mainRoutes = [
   {
@@ -19,7 +20,7 @@ export const mainRoutes = [
 const routes = [
   {
     path: '/index/*',
-    element: <FontEditorLayout />,
+    element: <AuthRouter><FontEditorLayout /></AuthRouter>,
     children: mainRoutes
   },
   {

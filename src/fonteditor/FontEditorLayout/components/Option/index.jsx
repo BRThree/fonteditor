@@ -5,7 +5,7 @@ import ImportDrop from './components/ImportDrop';
 import ToolDrop from "./components/ToolDrop";
 import SettingDrop from "./components/SettingDrop";
 import styles from './index.module.scss';
-import PreviewDrop from "./components/PreviewIDrop";
+import PreviewDrop from "./components/PreviewDrop";
 import exporter from "../../../widget/exporter";
 import {useProgramStore} from "../../../store/programStore";
 

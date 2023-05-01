@@ -14,6 +14,8 @@ import transformGlyfContours from 'fonteditor-core/ttf/util/transformGlyfContour
 import ProjectViewer from '@/components/ProjectViewer';
 import { useProgramStore } from '@/store/programStore';
 import { useGlyphListStore } from '../../store/glyphListStore';
+import {RollbackOutlined} from '@ant-design/icons';
+import {useNavigate} from "react-router-dom";
 
 let cleanList = [];
 
@@ -21,11 +23,17 @@ function Editor() {
   const [editorController, setEditorController] = useState(null);
   const [isResizing, setIsResizing] = useState(false);
   const { setEditingIndex } = useGlyphListStore();
+  const navigation = useNavigate();
   
   const [params] = useSearchParams();
   const index = useMemo(() => +Number(params.get('index')), [params]);
   const { ttf } = useTtfStore();
   const { program, bindProgramEvent, cleanProgramEvent } = useProgramStore();
+
+  // 返回主页
+  const handleBackHome = () => {
+    navigation('/')
+  };
 
   // 初始化字体
   const initCurGlyph = () => {
@@ -99,6 +107,7 @@ function Editor() {
 
   return (
     <div className={styles['editor-container']} id="editor-container">
+      <RollbackOutlined onClick={handleBackHome} className={styles['back-home']} />
       <div className={styles['editor-menu']} id="editor-menu"></div>
       <div className={styles['editor-main']}>
         {/* {isResizing && <div className={styles['resize-mark']} />} */}

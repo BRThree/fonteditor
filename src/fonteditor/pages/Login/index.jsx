@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import styles from './index.module.scss'
 import LoginBox from "./components/LoginBox";
 import RegisterBox from "./components/RegisterBox";
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [isRightActive, setIsRightActive] = useState(false)
@@ -16,10 +17,10 @@ const Login = () => {
                 }
             >
                 <div className={`${styles['form-container']} ${styles['sign-up-container']}`}>
-                    <LoginBox />
+                    <RegisterBox />
                 </div>
                 <div className={`${styles['form-container']} ${styles['sign-in-container']}`}>
-                    <RegisterBox />
+                    <LoginBox />
                 </div>
                 <div className={styles['overlay-container']}>
                     <div className={styles['overlay']}>
